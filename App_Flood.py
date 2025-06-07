@@ -81,12 +81,29 @@ elif page == "Visualisasi Data":
         st.pyplot(plt)
 
     with tab2:
-        plt.figure(figsize=(10, 6))
-        sns.histplot(df['FloodProbability'], bins=30, kde=True, color='skyblue', edgecolor='black')
-        plt.axvline(df['FloodProbability'].mean(), color='red', linestyle='dashed', linewidth=2)
-        plt.text(df['FloodProbability'].mean()+0.01, plt.ylim()[1]*0.9, 'Mean', color='red')
-        plt.title("Flood Probability Distribution with Mean Line")
-        st.pyplot(plt)
+        # Distribusi Flood Probability - lebih modern
+        st.subheader("Distribusi Flood Probability (Modern View)")
+        
+        fig, ax = plt.subplots(figsize=(10, 6))
+        # Plot histogram dengan KDE + transparansi + warna gradasi
+        sns.histplot(
+            df['FloodProbability'],
+            bins=30,
+            kde=True,
+            color="#4C72B0",
+            alpha=0.7,  # transparansi
+            edgecolor="black"
+        )
+        # Styling
+        ax.set_title("Distribusi Flood Probability", fontsize=16, fontweight='bold')
+        ax.set_xlabel("Flood Probability", fontsize=12)
+        ax.set_ylabel("Frequency", fontsize=12)
+        ax.grid(axis='y', linestyle='--', alpha=0.6)
+        
+        # Remove top + right border
+        sns.despine()
+        
+        st.pyplot(fig)
 
 # Page 3: Prediksi Risiko Banjir
 elif page == "Prediksi Risiko Banjir":
