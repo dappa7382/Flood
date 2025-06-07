@@ -150,16 +150,27 @@ elif page == "Evaluasi Model":
 elif page == "Clustering Daerah":
     st.title("🔍 Clustering Daerah Berdasarkan Faktor Risiko Banjir")
 
+    # Scaling data (INI YANG HARUS ADA supaya X_scaled tidak error!)
+    X_scaled = scaler.transform(df[selected_features])
+
+    # Predict cluster untuk seluruh dataset
+    cluster_labels = kmeans_model.predict(X_scaled)
+
+    # Tambahkan ke dataframe
+    df['FloodRiskCluster'] = cluster_labels
+
+    # Visualisasi PCA 2D
+    st.subheader("Visualisasi Cluster (PCA 2D)")
+
     from sklearn.decomposition import PCA
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
 
-    # Visualisasi PCA
-    st.subheader("Visualisasi Cluster (PCA 2D)")
     fig, ax = plt.subplots(figsize=(10, 6))
     sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['FloodRiskCluster'], palette='Set2', s=100)
     plt.xlabel('PCA 1')
     plt.ylabel('PCA 2')
+    plt.title("Clustering Daerah (PCA 2D)")
     st.pyplot(fig)
 
     st.markdown("---")
@@ -170,8 +181,9 @@ elif page == "Clustering Daerah":
 
     fig2, ax2 = plt.subplots(figsize=(8, 8))
     explode = [0.05] * len(cluster_counts)  # create '3D' effect
-    wedges, texts, autotexts = ax2.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%', startangle=140,
-                                       explode=explode, shadow=True, colors=sns.color_palette('Set2'))
+    wedges, texts, autotexts = ax2.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%',
+                                       startangle=140, explode=explode, shadow=True,
+                                       colors=sns.color_palette('Set2'))
     plt.setp(autotexts, size=12, weight='bold')
     ax2.axis('equal')
     st.pyplot(fig2)
@@ -185,4 +197,3 @@ elif page == "Clustering Daerah":
     with st.expander("📋 Profil Rata-rata per Cluster"):
         cluster_profile = df.groupby('FloodRiskCluster')[selected_features + ['FloodProbability']].mean()
         st.dataframe(cluster_profile)
-
