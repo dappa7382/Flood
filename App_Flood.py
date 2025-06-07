@@ -17,6 +17,7 @@ import joblib
 from sklearn.preprocessing import StandardScaler
 
 # Load model yang sudah disimpan sebelumnya
+reg_model = joblib.load('flood_probability_regressor_new.pkl')
 clf_model = joblib.load('flood_risk_classifier.pkl')
 kmeans_model = joblib.load('kmeans_model.pkl')
 scaler = joblib.load('scaler.pkl')
@@ -116,8 +117,12 @@ elif page == "Evaluasi Model":
     st.title("📈 Evaluasi Model")
 
     # Dummy metrics → masukkan hasil evaluasi dari training kamu
+    st.subheader("Regression Model (FloodProbability Prediction):")
+    st.write("Mean Squared Error (MSE): 0.0014")
+    st.write("R² Score: 0.4318")
+    
     st.subheader("Classification Model (FloodRisk Category):")
-    st.write("Accuracy: 85%")
+    st.write("Accuracy: 0.9822")
     st.write("Precision / Recall / F1-score → lihat laporan training")
 
     # Feature importance
