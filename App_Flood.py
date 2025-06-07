@@ -82,7 +82,7 @@ elif page == "Visualisasi Data":
 
     with tab2:
         st.subheader("Distribusi Flood Probability")
-        fig, ax = plt.subplots(figsize=(10, 6))
+        fig, ax = plt.subplots(figsize=(12, 10))
         # Plot histogram dengan KDE + transparansi + warna gradasi
         colors = sns.color_palette("Blues", as_cmap=True)
         sns.histplot(
@@ -184,7 +184,7 @@ elif page == "Clustering Daerah":
 
     with col1:
         st.subheader("Visualisasi Cluster (PCA 2D)")
-        fig, ax = plt.subplots(figsize=(8, 6))
+        fig, ax = plt.subplots(figsize=(6, 6))
         sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['FloodRiskCluster'], palette='Set2', s=100)
         plt.xlabel('PCA 1')
         plt.ylabel('PCA 2')
