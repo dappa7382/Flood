@@ -27,7 +27,7 @@ selected_features = [
     'MonsoonIntensity', 'TopographyDrainage', 'Deforestation',
     'Urbanization', 'Encroachments', 'DrainageSystems',
     'CoastalVulnerability', 'Landslides', 'Watersheds',
-    'PopulationScore', 'WetlandLoss'
+    'PopulationScore', 'WetlandLoss', 'FloodProbability'
 ]
 
 # Dummy dataframe (replace with your original flood.csv if needed)
