@@ -123,7 +123,6 @@ elif page == "Evaluasi Model":
     
     st.subheader("Classification Model (FloodRisk Category):")
     st.write("Accuracy: 0.9822")
-    st.write("Precision / Recall / F1-score → lihat laporan training")
 
     # Feature importance
     st.subheader("Feature Importance (FloodProbability Regression):")
