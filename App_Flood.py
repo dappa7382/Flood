@@ -81,9 +81,7 @@ elif page == "Visualisasi Data":
         st.pyplot(plt)
 
     with tab2:
-        # Distribusi Flood Probability - lebih modern
-        st.subheader("Distribusi Flood Probability (Modern View)")
-        
+        st.subheader("Distribusi Flood Probability")
         fig, ax = plt.subplots(figsize=(10, 6))
         # Plot histogram dengan KDE + transparansi + warna gradasi
         sns.histplot(
