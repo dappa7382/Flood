@@ -35,7 +35,7 @@ df = pd.read_csv('flood.csv')
 
 # Sidebar navigation
 st.sidebar.title("Flood Risk Dashboard")
-page = st.sidebar.radio("Go to", ["Deskripsi", "Visualisasi Data", "Prediksi Risiko Banjir", "Evaluasi Model"])
+page = st.sidebar.radio("Go to", ["Deskripsi", "Visualisasi Data", "Prediksi Risiko Banjir", "Evaluasi Model", "Clustering Daerah"])
 
 # Page 1: Deskripsi
 if page == "Deskripsi":
