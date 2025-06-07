@@ -1,4 +1,5 @@
-# Modern Flood Dashboard Layout
+# flood_dashboard.py
+
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -6,14 +7,13 @@ import seaborn as sns
 import joblib
 from sklearn.preprocessing import StandardScaler
 
-# Load model & data
+# Load model
 reg_model = joblib.load('flood_probability_regressor_new.pkl')
 clf_model = joblib.load('flood_risk_classifier.pkl')
 kmeans_model = joblib.load('kmeans_model.pkl')
 scaler = joblib.load('scaler.pkl')
-df = pd.read_csv('flood.csv')
 
-# Selected features
+# Feature list
 selected_features = [
     'MonsoonIntensity', 'TopographyDrainage', 'Deforestation',
     'Urbanization', 'Encroachments', 'DrainageSystems',
@@ -21,57 +21,72 @@ selected_features = [
     'PopulationScore', 'WetlandLoss'
 ]
 
-# Add clustering
-X_scaled = scaler.transform(df[selected_features])
-cluster_labels = kmeans_model.predict(X_scaled)
-df['FloodRiskCluster'] = cluster_labels
+# Load data
+df = pd.read_csv('flood.csv')
 
-# Sidebar
+# Sidebar navigation (pakai selectbox)
 st.sidebar.title("🌊 Flood Risk Dashboard")
-page = st.sidebar.radio("📌 Menu", [
-    "Dashboard Utama",
-    "Prediksi Risiko Banjir",
-    "Visualisasi Data",
+page = st.sidebar.selectbox("📌 Pilih Halaman", [
+    "Deskripsi", 
+    "Visualisasi Data", 
+    "Prediksi Risiko Banjir", 
+    "Evaluasi Model", 
     "Clustering Daerah"
 ])
 
-# Dashboard Utama
-if page == "Dashboard Utama":
-    st.title("🌟 Dashboard Risiko Banjir")
+# Page 1: Deskripsi
+if page == "Deskripsi":
+    st.title("📖 Deskripsi Dataset & Tujuan Aplikasi")
 
-    st.markdown("### 👋 Selamat Datang di Flood Risk Dashboard")
+    with st.expander("🗂️ Lihat Contoh Data (First 5 Rows - Selected Features)"):
+        st.dataframe(df[selected_features + ['FloodProbability']].head())
 
-    # Top KPIs
-    col1, col2, col3, col4 = st.columns(4)
-    col1.metric("Jumlah Data", f"{len(df)} daerah")
-    col2.metric("Mean Flood Probability", f"{df['FloodProbability'].mean():.2f}")
-    col3.metric("Max Flood Probability", f"{df['FloodProbability'].max():.2f}")
-    col4.metric("Jumlah Cluster", f"{df['FloodRiskCluster'].nunique()} cluster")
+    st.markdown("""
+    **Dataset:**  
+    Dataset ini berisi faktor-faktor yang memengaruhi risiko banjir di berbagai daerah.
 
-    st.markdown("---")
+    **Fitur yang digunakan:**  
+    - MonsoonIntensity
+    - TopographyDrainage
+    - Deforestation
+    - Urbanization
+    - Encroachments
+    - DrainageSystems
+    - CoastalVulnerability
+    - Landslides
+    - Watersheds
+    - PopulationScore
+    - WetlandLoss
 
-    # KPI Chart 1 → Pie chart Cluster distribution
-    st.subheader("📊 Distribusi Cluster Risiko Banjir")
-    cluster_counts = df['FloodRiskCluster'].value_counts().sort_index()
-    fig1, ax1 = plt.subplots()
-    ax1.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%', startangle=90)
-    ax1.axis('equal')
-    st.pyplot(fig1)
+    **Target:**  
+    - FloodProbability
 
-    # KPI Chart 2 → Trend FloodProbability
-    st.subheader("📈 Trend Flood Probability (Sorted Index)")
-    df_sorted = df.sort_values(by='FloodProbability').reset_index()
-    fig2, ax2 = plt.subplots()
-    ax2.plot(df_sorted.index, df_sorted['FloodProbability'], color='blue', linewidth=2)
-    ax2.set_xlabel("Daerah (sorted index)")
-    ax2.set_ylabel("Flood Probability")
-    st.pyplot(fig2)
+    **Tujuan Aplikasi:**  
+    - Memvisualisasikan data faktor risiko banjir  
+    - Memprediksi probabilitas banjir dan klasifikasi risiko banjir  
+    - Menyediakan insight bagi perencanaan penanggulangan banjir  
+    """)
 
-    # Data Table → Daerah Top 10
-    st.subheader("📋 Daerah dengan Flood Probability Tertinggi")
-    st.dataframe(df[selected_features + ['FloodProbability', 'FloodRiskCluster']].sort_values(by='FloodProbability', ascending=False).head(10))
+# Page 2: Visualisasi Data
+elif page == "Visualisasi Data":
+    st.title("📊 Visualisasi Data")
 
-# Prediksi Risiko Banjir
+    tab1, tab2 = st.tabs(["📈 Correlation Matrix", "📉 Distribusi Flood Probability"])
+
+    with tab1:
+        st.subheader("Correlation Matrix")
+        plt.figure(figsize=(12, 10))
+        corr_matrix = df[selected_features + ['FloodProbability']].corr()
+        sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+        st.pyplot(plt)
+
+    with tab2:
+        st.subheader("Distribusi Flood Probability")
+        plt.figure(figsize=(8, 6))
+        sns.histplot(df['FloodProbability'], bins=30, kde=True)
+        st.pyplot(plt)
+
+# Page 3: Prediksi Risiko Banjir
 elif page == "Prediksi Risiko Banjir":
     st.title("🚀 Prediksi Risiko Banjir")
 
@@ -80,12 +95,19 @@ elif page == "Prediksi Risiko Banjir":
     for feature in selected_features:
         input_data[feature] = st.slider(f"{feature}", float(df[feature].min()), float(df[feature].max()), float(df[feature].mean()))
 
+    # Convert to dataframe
     input_df = pd.DataFrame([input_data])
+
+    # Scaling
     X_input_scaled = scaler.transform(input_df)
 
+    # Predict regression
     flood_prob_pred = reg_model.predict(X_input_scaled)[0]
+
+    # Predict classification
     flood_risk_class_pred = clf_model.predict(X_input_scaled)[0]
 
+    # Label risk class
     risk_labels = ['Low', 'Medium', 'High']
     risk_pred_label = risk_labels[flood_risk_class_pred]
 
@@ -93,30 +115,58 @@ elif page == "Prediksi Risiko Banjir":
     st.write(f"**Probabilitas Banjir:** {flood_prob_pred:.2f}")
     st.write(f"**Kategori Risiko:** {risk_pred_label}")
 
-# Visualisasi Data
-elif page == "Visualisasi Data":
-    st.title("📊 Visualisasi Data")
+# Page 4: Evaluasi Model
+elif page == "Evaluasi Model":
+    st.title("📈 Evaluasi Model")
 
-    st.subheader("Correlation Matrix")
-    plt.figure(figsize=(12, 10))
-    corr_matrix = df[selected_features + ['FloodProbability']].corr()
-    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm')
+    st.subheader("Regression Model (FloodProbability Prediction):")
+    st.write("Mean Squared Error (MSE): 0.0014")
+    st.write("R² Score: 0.4318")
+    
+    st.subheader("Classification Model (FloodRisk Category):")
+    st.write("Accuracy: 0.9822")
+
+    st.subheader("Feature Importance (FloodProbability Regression):")
+    importances = reg_model.feature_importances_
+
+    feat_imp_df = pd.DataFrame({
+        'Feature': selected_features,
+        'Importance': importances
+    }).sort_values(by='Importance', ascending=False)
+
+    st.dataframe(feat_imp_df)
+
+    plt.figure(figsize=(10, 6))
+    sns.barplot(x='Importance', y='Feature', data=feat_imp_df)
     st.pyplot(plt)
 
-# Clustering Daerah
+# Page 5: Clustering Daerah
 elif page == "Clustering Daerah":
     st.title("🔍 Clustering Daerah Berdasarkan Faktor Risiko Banjir")
 
+    # Scaling data
+    X_scaled = scaler.transform(df[selected_features])
+
+    # Predict cluster untuk seluruh dataset
+    cluster_labels = kmeans_model.predict(X_scaled)
+
+    # Tambahkan ke dataframe
+    df['FloodRiskCluster'] = cluster_labels
+
+    # Visualisasi PCA 2D
     from sklearn.decomposition import PCA
+
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
 
     st.subheader("Visualisasi Cluster (PCA 2D)")
-    fig, ax = plt.subplots(figsize=(10, 6))
+
+    plt.figure(figsize=(10, 6))
     sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['FloodRiskCluster'], palette='Set2', s=100)
+    plt.title('Clustering Daerah (PCA 2D)')
     plt.xlabel('PCA 1')
     plt.ylabel('PCA 2')
-    st.pyplot(fig)
+    st.pyplot(plt)
 
     st.subheader("Daftar Daerah dengan Cluster")
     st.dataframe(df[selected_features + ['FloodProbability', 'FloodRiskCluster']].head(20))
