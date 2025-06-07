@@ -129,7 +129,6 @@ elif page == "Evaluasi Model":
     with col2:
         st.subheader("Classification Model (FloodRisk Category)")
         st.metric("Accuracy", "0.9822")
-        st.info("Precision / Recall / F1-score → lihat laporan training")
 
     st.markdown("---")
 
@@ -180,7 +179,6 @@ elif page == "Clustering Daerah":
     cluster_counts = df['FloodRiskCluster'].value_counts().sort_index()
 
     fig2, ax2 = plt.subplots(figsize=(8, 8))
-    explode = [0.05] * len(cluster_counts)  # create '3D' effect
     wedges, texts, autotexts = ax2.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%',
                                        startangle=140, explode=explode, shadow=True,
                                        colors=sns.color_palette('Set2'))
