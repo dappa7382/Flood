@@ -84,6 +84,7 @@ elif page == "Visualisasi Data":
         st.subheader("Distribusi Flood Probability")
         fig, ax = plt.subplots(figsize=(10, 6))
         # Plot histogram dengan KDE + transparansi + warna gradasi
+        colors = sns.color_palette("Blues", as_cmap=True)
         sns.histplot(
             df['FloodProbability'],
             bins=30,
