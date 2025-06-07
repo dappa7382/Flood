@@ -149,7 +149,7 @@ elif page == "Evaluasi Model":
 elif page == "Clustering Daerah":
     st.title("🔍 Clustering Daerah Berdasarkan Faktor Risiko Banjir")
 
-    # Scaling data (INI YANG HARUS ADA supaya X_scaled tidak error!)
+    # Scaling data
     X_scaled = scaler.transform(df[selected_features])
 
     # Predict cluster untuk seluruh dataset
@@ -158,33 +158,32 @@ elif page == "Clustering Daerah":
     # Tambahkan ke dataframe
     df['FloodRiskCluster'] = cluster_labels
 
-    # Visualisasi PCA 2D
-    st.subheader("Visualisasi Cluster (PCA 2D)")
-
+    # PCA untuk 2D scatter plot
     from sklearn.decomposition import PCA
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['FloodRiskCluster'], palette='Set2', s=100)
-    plt.xlabel('PCA 1')
-    plt.ylabel('PCA 2')
-    plt.title("Clustering Daerah (PCA 2D)")
-    st.pyplot(fig)
+    # Layout 2 kolom
+    col1, col2 = st.columns(2)
 
-    st.markdown("---")
+    with col1:
+        st.subheader("Visualisasi Cluster (PCA 2D)")
+        fig, ax = plt.subplots(figsize=(8, 6))
+        sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=df['FloodRiskCluster'], palette='Set2', s=100)
+        plt.xlabel('PCA 1')
+        plt.ylabel('PCA 2')
+        plt.title("Clustering Daerah (PCA 2D)")
+        st.pyplot(fig)
 
-    # Pie chart cluster distribusi
-    st.subheader("Distribusi Cluster (Pie Chart 3D-like Effect)")
-    cluster_counts = df['FloodRiskCluster'].value_counts().sort_index()
+    with col2:
+        st.subheader("Distribusi Cluster (Pie Chart)")
+        cluster_counts = df['FloodRiskCluster'].value_counts().sort_index()
 
-    fig2, ax2 = plt.subplots(figsize=(8, 8))
-    wedges, texts, autotexts = ax2.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%',
-                                       startangle=140, explode=explode, shadow=True,
-                                       colors=sns.color_palette('Set2'))
-    plt.setp(autotexts, size=12, weight='bold')
-    ax2.axis('equal')
-    st.pyplot(fig2)
+        fig2, ax2 = plt.subplots(figsize=(6, 6))
+        ax2.pie(cluster_counts, labels=cluster_counts.index, autopct='%1.1f%%',
+                startangle=140, colors=sns.color_palette('Set2'))
+        ax2.axis('equal')
+        st.pyplot(fig2)
 
     st.markdown("---")
 
@@ -192,6 +191,7 @@ elif page == "Clustering Daerah":
     st.subheader("Daftar Daerah dengan Cluster")
     st.dataframe(df[selected_features + ['FloodProbability', 'FloodRiskCluster']].head(20))
 
+    # Profil per cluster
     with st.expander("📋 Profil Rata-rata per Cluster"):
         cluster_profile = df.groupby('FloodRiskCluster')[selected_features + ['FloodProbability']].mean()
         st.dataframe(cluster_profile)
