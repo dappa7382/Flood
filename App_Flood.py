@@ -205,7 +205,7 @@ elif page == "Clustering Daerah":
 
     # Dataframe cluster
     st.subheader("Daftar Daerah dengan Cluster")
-    st.dataframe(df[selected_features + ['FloodProbability', 'FloodRiskCluster']].head(20))
+    st.dataframe(df[selected_features + ['FloodProbability', 'FloodRiskCluster']].head(50000))
 
     # Profil per cluster
     with st.expander("📋 Profil Rata-rata per Cluster"):
