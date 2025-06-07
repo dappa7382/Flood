@@ -40,6 +40,8 @@ page = st.sidebar.radio("Go to", ["Deskripsi", "Visualisasi Data", "Prediksi Ris
 # Page 1: Deskripsi
 if page == "Deskripsi":
     st.title("📖 Deskripsi Dataset & Tujuan Aplikasi")
+    st.subheader("Contoh Data (First 5 Rows)")
+    st.dataframe(df.head())
     st.markdown("""
     **Dataset:**
     Dataset ini berisi faktor-faktor yang memengaruhi risiko banjir di berbagai daerah.
