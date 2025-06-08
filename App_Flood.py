@@ -45,8 +45,10 @@ if page == "Deskripsi":
     **Dataset:**  
     Dataset ini berisi faktor-faktor yang memengaruhi risiko banjir di berbagai daerah.
     """)
-    
-    with tab1:
+
+    # Layout 2 kolom
+    col1, col2 = st.columns(2)
+    with col1:
         st.markdown("""
         **Fitur yang digunakan:**  
         - MonsoonIntensity
@@ -61,7 +63,7 @@ if page == "Deskripsi":
         - PopulationScore
         - WetlandLoss
         """)
-    with tab2:
+    with col2:
         st.markdown("""
         **Target:**  
         - FloodProbability
