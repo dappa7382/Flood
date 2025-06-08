@@ -44,29 +44,34 @@ if page == "Deskripsi":
     st.markdown("""
     **Dataset:**  
     Dataset ini berisi faktor-faktor yang memengaruhi risiko banjir di berbagai daerah.
-
-    **Fitur yang digunakan:**  
-    - MonsoonIntensity
-    - TopographyDrainage
-    - Deforestation
-    - Urbanization
-    - Encroachments
-    - DrainageSystems
-    - CoastalVulnerability
-    - Landslides
-    - Watersheds
-    - PopulationScore
-    - WetlandLoss
-
-    **Target:**  
-    - FloodProbability
-
-    **Tujuan Aplikasi:**  
-    - Memvisualisasikan data faktor risiko banjir  
-    - Memprediksi probabilitas banjir dan klasifikasi risiko banjir  
-    - Menyediakan insight bagi perencanaan penanggulangan banjir  
     """)
-
+    
+    with tab1:
+        st.markdown("""
+        **Fitur yang digunakan:**  
+        - MonsoonIntensity
+        - TopographyDrainage
+        - Deforestation
+        - Urbanization
+        - Encroachments
+        - DrainageSystems
+        - CoastalVulnerability
+        - Landslides
+        - Watersheds
+        - PopulationScore
+        - WetlandLoss
+        """)
+    with tab2:
+        st.markdown("""
+        **Target:**  
+        - FloodProbability
+    
+        **Tujuan Aplikasi:**  
+        - Memvisualisasikan data faktor risiko banjir  
+        - Memprediksi probabilitas banjir dan klasifikasi risiko banjir  
+        - Menyediakan insight bagi perencanaan penanggulangan banjir  
+        """)
+        
 # Page 2: Visualisasi Data
 elif page == "Visualisasi Data":
     st.title("📊 Visualisasi Data")
