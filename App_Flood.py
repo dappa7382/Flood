@@ -43,12 +43,7 @@ if page == "Deskripsi":
 
     st.markdown("""
     **Dataset:**  
-    Deteksi banjir mengacu pada identifikasi, pemantauan, dan peringatan kepada pihak berwenang atau
-    individu tentang keberadaan atau kemungkinan banjir di suatu wilayah tertentu. Deteksi banjir 
-    melibatkan penggunaan berbagai teknologi dan metode untuk mendeteksi, memprediksi, dan mengurangi
-    dampak banjir. Prediksi banjir merupakan bidang penelitian yang penting karena dampaknya yang signifikan 
-    terhadap kehidupan manusia, infrastruktur, dan lingkungan. Model prediksi banjir yang akurat dapat 
-    membantu dalam kesiapsiagaan bencana dan manajemen risiko, serta mengurangi dampak buruk banjir.
+    Deteksi banjir mengacu pada identifikasi, pemantauan, dan peringatan kepada pihak berwenang atau individu tentang keberadaan atau kemungkinan banjir di suatu wilayah tertentu. Deteksi banjir melibatkan penggunaan berbagai teknologi dan metode untuk mendeteksi, memprediksi, dan mengurangi dampak banjir. Prediksi banjir merupakan bidang penelitian yang penting karena dampaknya yang signifikan terhadap kehidupan manusia, infrastruktur, dan lingkungan. Model prediksi banjir yang akurat dapat membantu dalam kesiapsiagaan bencana dan manajemen risiko, serta mengurangi dampak buruk banjir.
     """)
 
     # Layout 2 kolom
